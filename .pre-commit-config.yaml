@@ -11,7 +11,7 @@ repos:
     rev: v0.14.4
     hooks:
       - id: ruff-check
-        args: [ --fix ]
+        args: [ --fix, --select, I]
         types_or: [ python, pyi ]
       - id: ruff-format
         types_or: [ python, pyi ]

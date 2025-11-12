@@ -1,5 +1,6 @@
-from fastapi import FastAPI
 import logging
+
+from fastapi import FastAPI
 from middleware import LoggingMiddleware
 
 # Configure logging
@@ -16,12 +17,12 @@ app.middleware("http")(LoggingMiddleware())
 
 
 @app.get("/health")
-async def health_check():
+async def health_check() -> dict[str, str]:
     """Health check endpoint."""
     return {"status": "healthy", "service": "board-game-chat"}
 
 
 @app.get("/")
-async def root():
+async def root() -> dict[str, str]:
     """Root endpoint."""
     return {"message": "Welcome to Board Game Chat API"}
