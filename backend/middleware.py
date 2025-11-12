@@ -1,8 +1,9 @@
-from fastapi import Request
-from typing import Callable
-import time
 import json
 import logging
+import time
+from typing import Any, Callable, Coroutine
+
+from fastapi import Request
 from starlette.responses import Response
 
 logger = logging.getLogger(__name__)
@@ -11,7 +12,11 @@ logger = logging.getLogger(__name__)
 class LoggingMiddleware:
     """Middleware to log request payloads, headers, and responses."""
 
-    async def __call__(self, request: Request, call_next: Callable):
+    async def __call__(
+        self,
+        request: Request,
+        call_next: Callable[[Request], Coroutine[Any, Any, Response]],
+    ) -> Response:
         # Log request start time
         start_time = time.time()
 
@@ -52,7 +57,7 @@ class LoggingMiddleware:
 
         # Read response body
         response_body = b""
-        async for chunk in response.body_iterator:
+        async for chunk in response.body_iterator:  # type: ignore[attr-defined]
             response_body += chunk
 
         # Log response body if present

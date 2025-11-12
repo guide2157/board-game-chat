@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+env:
+  UV_SYSTEM_PYTHON: 1
+
+jobs:
+  linting-and-testing:
+    name: Linting and testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install dependencies
+        run: |
+          uv pip install -r backend/requirements-dev.txt
+
+      - name: Set PYTHONPATH
+        run: |
+          echo "PYTHONPATH=$GITHUB_WORKSPACE/backend" >> $GITHUB_ENV
+
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
+      - name: Run mypy
+        working-directory: backend
+        run: mypy .
+
+      - name: Run unit tests
+        working-directory: backend
+        run: pytest test
