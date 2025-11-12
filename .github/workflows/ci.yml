@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  UV_SYSTEM_PYTHON: 1
+  PYTHONPATH: backend
+
 jobs:
   linting-and-testing:
     name: Linting and testing
@@ -24,22 +28,14 @@ jobs:
       - name: Install dependencies
         run: |
           uv pip install -r backend/requirements-dev.txt
-        env:
-          UV_SYSTEM_PYTHON: 1
 
       - name: Run pre-commit
         run: pre-commit run --all-files
-        env:
-          UV_SYSTEM_PYTHON: 1
 
       - name: Run mypy
         working-directory: backend
         run: mypy .
-        env:
-          UV_SYSTEM_PYTHON: 1
 
       - name: Run unit tests
         working-directory: backend
         run: pytest test
-        env:
-          UV_SYSTEM_PYTHON: 1
