@@ -1,0 +1,28 @@
+name: Deploy to Render
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Python backend deploy
+        run: |
+          curl -X POST "$RENDER_DEPLOY_PYTHON"
+        env:
+          RENDER_DEPLOY_PYTHON: ${{ secrets.RENDER_DEPLOY_PYTHON }}
+
+      - name: Trigger C++ backend deploy
+        run: |
+          curl -X POST "$RENDER_DEPLOY_CPP"
+        env:
+          RENDER_DEPLOY_CPP: ${{ secrets.RENDER_DEPLOY_CPP }}
+
+      - name: Trigger Frontend deploy
+        run: |
+          curl -X POST "$RENDER_DEPLOY_FRONTEND"
+        env:
+          RENDER_DEPLOY_FRONTEND: ${{ secrets.RENDER_DEPLOY_FRONTEND }}
